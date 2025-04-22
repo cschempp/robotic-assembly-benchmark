@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Industrial Robotic Assembly Benchmark for Long-Horizon Manipulation</title>
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.png">
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
   rel="stylesheet">
 
@@ -33,18 +33,11 @@
             <div class="is-size-5 publication-authors">
               <!-- Paper authors -->
               <span class="author-block">
-                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">Constantin Schempp</a>,</span>
-                <span class="author-block">
-                  <a href="SECOND AUTHOR PERSONAL LINK" target="_blank">Luca Kofler</a>,</span>
-                  <span class="author-block">
-                    <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Laura Suhm</a>,</span>
-                    <span class="author-block">
-                      <a href="FOURTH AUTHOR PERSONAL LINK" target="_blank">Christian Friedrich</a>
-                    </span>
+                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">removed for review</a>,</span>
                   </div>
 
                   <div class="is-size-5 publication-authors">
-                    <span class="author-block">Karlsruhe University of Applied Sciences<br>Conferance name and year</span>
+                    <span class="author-block">removed for review<br>removed for review.</span>
                   </div>
 
                   <div class="column has-text-centered">
@@ -122,8 +115,595 @@
   </div>
 </section>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <footer class="footer">
+<section class="section hero">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">CAD part and assembly files</h2>    
+
+    <div class="content has-text-justified">
+      <p> <br>
+        <button class="btn"><i class="fa fa-download"></i><a href="static/cad/cad_prt_asm.zip">  Download</a></button>
+        <b>&rarr; cad_prt_asm.zip</b><br>
+        This includes all parts and assembly groups in Creo native file formats .prt and .asm.
+
+        The predefined assembly groups are described in the following table. 
+        <br> <br>
+
+        <button class="btn"><i class="fa fa-download"></i><a href="static/cad/cad_step.zip">  Download</a></button> 
+        <b>&rarr; cad_step.zip</b><br>
+        This includes all parts in .step file format. 
+        <br> <br>
+
+        <button class="btn"><i class="fa fa-download"></i><a href="static/cad/cad_stl.zip">  Download</a></button>
+        <b>&rarr; cad_stl.zip</b> <br>
+        This includes all parts in .stl file format. 
+        <br> <br>
+        
+        For downloading individual files, see the images below. The link to download the respective file are provided beneath each image.
+        Depending on your browser, you may have to right-click, "save target as"/"save link as" to save the file.
+        <table>
+          <tr>
+            <td>
+              <b>benchmark_assembly.asm</b>:<br> The completely assembled benchmark, without the board and fixations. <br> <br>
+              <img src="static/images/benchmark_assembly.png" style="height:150px;">
+            </td>
+            <td>
+              <b>benchmark_start_position.asm</b>:<br> The start position of the benchmark, with all components aranged at their initial positions. <br> <br>
+              <img src="static/images/benchmark_initial_position.png" style="height:150px;">
+            </td>
+            <td>
+              <b>benchmark_final_position.asm</b>:<br> The final state of the benchmark, when all components are assembled. <br> <br>
+              <img src="static/images/benchmark_final_position.png" style="height:150px;">
+            </td>
+            <td>
+              <b>housing_bottom_assembly.asm</b>:<br> Assembly group of all components which have to be assembled into the bottom housing. <br> <br>
+              <img src="static/images/housing_bottom_assembly.png" style="height:150px;">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>housing_middle_assembly.asm</b>:<br> Assembly group of all components which have to be assembled into the middle housing. <br> <br>
+              <img src="static/images/housing_middle_assembly.png" style="height:150px;">
+            </td>
+            <td>
+              <b>housing_middle_assembly_initial.asm</b>:<br> The middle housing assembly with only the fixed parts. <br> <br> <br> <br>
+              <img src="static/images/housing_middle_assembly_initial.png" style="height:150px;">
+            </td>
+            <td>
+              <b>housing_top_assembly.asm</b>:<br> Assembly group of all components which have to be assembled into the top housing. <br> <br> <br>
+              <img src="static/images/housing_top_assembly.png" style="height:150px;">
+            </td>
+            <td>
+              <b>housing_top_assembly_initial.asm</b>:<br> The top housing assembly with only the fixed parts. <br> <br> <br> <br>
+              <img src="static/images/housing_top_assembly_initial.png" style="height:150px;"> 
+            </td>
+          </tr>
+
+        <tr>
+          <td>
+            <b>wooden board</b> <br>
+            <img src="static/images/board.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/drawing_wooden_board/board_benchmark.pdf">drawing_board.pdf</a> <br>
+            <a href="static/cad/cad_step/plate_benchmark.stp">plate_benchmark.stp</a> <br>
+            <a href="static/cad/cad_stl/plate_benchmark.stl">plate_benchmark.stl</a> <br>
+          </td>
+          <td>
+            <b>housing bottom</b> <br>
+            <img src="static/images/housing_bottom.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/housing_bottom_printed_part.stp">housing_bottom_printed_part.stp</a> <br>
+            <a href="static/cad/cad_stl/housing_bottom_printed_part.stl">housing_bottom_printed_part.stl</a> <br>        
+          </td>
+          <td>
+            <b>housing middle</b> <br>
+            <img src="static/images/housing_center.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/housing_middle.stp">housing_middle.stp</a> <br>  
+            <a href="static/cad/cad_stl/housing_middle.stl">housing_middle.stl</a> <br>   
+          </td>
+          <td>
+            <b>housing top</b> <br>
+            <img src="static/images/housing_top.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/housing_top.stp">housing_top.stp</a> <br>  
+            <a href="static/cad/cad_stl/housing_top.stl">housing_top.stl</a> <br> <br> <br>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <b>fixation_0</b> <br>
+            <img src="static/images/fixation_0.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/fixation_on_plate_0.stp">fixation_on_plate_0.stp</a> <br>  
+            <a href="static/cad/cad_stl/fixation_on_plate_0.stl">fixation_on_plate_0.stl</a> <br>
+          </td>
+          <td>
+            <b>fixation_1</b> <br>
+            <img src="static/images/fixation_1.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/fixation_on_plate_1.stp">fixation_on_plate_1.stp</a> <br>  
+            <a href="static/cad/cad_stl/fixation_on_plate_1.stl">fixation_on_plate_1.stl</a> <br>         
+          </td>
+          <td>
+            <b>fixation_2</b> <br>
+            <img src="static/images/fixation_2.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/fixation_on_plate_2.stp">fixation_on_plate_2.stp</a> <br>  
+            <a href="static/cad/cad_stl/fixation_on_plate_2.stl">fixation_on_plate_2.stl</a> <br>         
+          </td>
+          <td>
+            <b>fixation_3</b> <br>
+            <img src="static/images/fixation_3.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/fixation_on_plate_3.stp">fixation_on_plate_3.stp</a> <br>  
+            <a href="static/cad/cad_stl/fixation_on_plate_3">fixation_on_plate_3.stl</a> <br>   
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <b>pcb</b> <br>
+            <img src="static/images/pcb.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/pcb.stp">pcb.stp</a> <br>  
+            <a href="static/cad/cad_stl/pcb.stl">pcb.stl</a> <br>         
+          </td>
+          <td>
+            <b>pcb_pin</b> <br>
+            <img src="static/images/pcb_pin.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/pin_pcb.stp">pin_pcb.stp</a> <br>  
+            <a href="static/cad/cad_stl/pin_pcb.stl">pin_pcb.stl</a> <br>         
+          </td>
+          <td>
+            <b>coverplate</b> <br>
+            <img src="static/images/coverplate.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/cover_plate.stp">coverplate.stp</a> <br>  
+            <a href="static/cad/cad_stl/cover_plate.stl">coverplate.stl</a> <br>        
+          </td>
+          <td>
+            <b>gearwheel</b> <br>
+            <img src="static/images/gearwheel.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/gearwheel_teeth_35_mod_2.stp">gearwheel_teeth_35_mod_2.stp</a> <br>  
+            <a href="static/cad/cad_stl/gearwheel_teeth_35_mod_2.stl">gearwheel_teeth_35_mod_2.stl</a> <br>    
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <b>screw_hexagon</b> <br>
+            <img src="static/images/screw_hexagon.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/screw_m5_16_hexagon_head.stp">screw_m5_16_hexagon_head.stp</a> <br>  
+            <a href="static/cad/cad_stl/screw_m5_16_hexagon_head">screw_m5_16_hexagon_head.stl</a> <br>         
+          </td>
+          <td>
+            <b>screw_m5_12</b> <br>
+            <img src="static/images/screw_m5_12.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/screw_m5_12.stp">screw_m5_12.stp</a> <br>  
+            <a href="static/cad/cad_stl/screw_m5_12.stl">screw_m5_12.stl</a> <br>         
+          </td>
+          <td>
+            <b>bolt_midle_housing</b> <br>
+            <img src="static/images/bolt_midle_housing.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/bolt_middle_housing.stp">bolt_middle_housing.stp</a> <br>  
+            <a href="static/cad/cad_stl/bolt_middle_housing.stl">bolt_middle_housing.stl</a> <br>         
+          </td>
+          <td>
+            <b>dowel_pin</b> <br>
+            <img src="static/images/dowel_pin.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/positioning_pin_d5_20.stp">positioning_pin_d5_20.stp</a> <br>  
+            <a href="static/cad/cad_stl/positioning_pin_d5_20.stl">positioning_pin_d5_20.stl</a> <br>   
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <b>rotor</b> <br>
+            <img src="static/images/rotor.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/rotor_printed_part.stp">rotor_printed_part.stp</a> <br>  
+            <a href="static/cad/cad_stl/rotor_printed_part.stl">rotor_printed_part.stl</a> <br> 
+          </td>
+          <td>
+            <b>rotor_shaft</b> <br>
+            <img src="static/images/rotor_shaft.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/bolt_rotor.stp">bolt_rotor.stp</a> <br>  
+            <a href="static/cad/cad_stl/bolt_rotor.stl">bolt_rotor.stl</a> <br>         
+          </td>
+          <td>
+            <b>plug_inside_fixed</b> <br>
+            <img src="static/images/plug_inside_fixed.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/plug_inside_fixed.stp">plug_inside_fixed.stp</a> <br>  
+            <a href="static/cad/cad_stl/plug_inside_fixed.stl">plug_inside_fixed.stl</a> <br>        
+          </td>
+          <td>
+            <b>plug_inside_loose</b> <br>
+            <img src="static/images/plug_inside_loose.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/plug_inside_loose.stp">plug_inside_loose.step</a> <br>  
+            <a href="static/cad/cad_stl/plug_inside_loose.stl">plug_inside_loose.stl</a> <br>   
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <b>plug_outside_fixed</b> <br>
+            <img src="static/images/plug_outside_fixed.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/plug_outside_fixed.stp">plug_outside_fixed.stp</a> <br>  
+            <a href="static/cad/cad_stl/plug_outside_fixed.stl">plug_outside_fixed.stl</a> <br>         
+          </td>
+          <td>
+            <b>plug_outside_loose</b> <br>
+            <img src="static/images/plug_outside_loose.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/plug_outside_loose.stp">plug_outside_loose.stp</a> <br>  
+            <a href="static/cad/cad_stl/plug_outside_loose.stl">plug_outside_loose.stl</a> <br>         
+          </td>
+          <td>
+            <b>o_ring</b> <br>
+            <img src="static/images/o_ring.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/o_ring.stp">o_ring.stp</a> <br>  
+            <a href="static/cad/cad_stl/o_ring.stl">o_ring.stl</a> <br>         
+          </td>
+          <td>
+            <b>nozzle</b> <br>
+            <img src="static/images/nozzle.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/tube_nozzle.stp">tube_nozzle.stp</a> <br>  
+            <a href="static/cad/cad_stl/tube_nozzle.stl">tube_nozzle.stl</a> <br>   
+          </td>
+        </tr>
+        
+        <tr>
+          <td>
+            <b>nut</b> <br>
+            <img src="static/images/nut.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/nut_tube.stp">nut_tube.stp</a> <br>  
+            <a href="static/cad/cad_stl/nut_tube.stl">nut_tube.stl</a> <br>         
+          </td>
+          <td>
+            <b>tube</b> <br>
+            <img src="static/images/tube.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/tube.stp">tube.stp</a> <br>  
+            <a href="static/cad/cad_stl/tube.stl">tube.stl</a> <br>         
+          </td>
+          <td>
+            <b>clamp</b> <br>
+            <img src="static/images/clamp.png" style="height:150px; padding-right:10px;"> <br>
+            <a href="static/cad/cad_step/tube_clamp.stp">tube_clamp.stp</a> <br>  
+            <a href="static/cad/cad_stl/tube_clamp.stl">tube_clamp.stl</a> <br>         
+          </td>
+      </table>
+    </div>
+</section>
+
+
+<section class="section hero">
+  <div class="container is-max-desktop">
+  <h2 class="title is-3">Parts list</h2>
+  <p>The following table lists the parts used in the benchmark and where to buy them. Parts that were 3d printed are labeled "3d printed" as a supplier.</p> <br> 
+  <div class="columns is-centered">
+    <style type="text/css">
+      .tg  {border-collapse:collapse;border-spacing:0;}
+      .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+      .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+      </style>
+  <table class="tg" style="table-layout: fixed; width: 914px">
+    <colgroup>
+      <col style="width: 30px">
+      <col style="width: 240px">
+      <col style="width: 170px">
+      <col style="width: 239px">
+      <col style="width: 76px">
+      <col style="width: 155px">
+      <col style="width: 146px">
+    </colgroup>
+    <tr>
+      <th class="tg-031e"><b>id</b></th>
+      <th class="tg-031e"><b>name</b></th>
+      <th class="tg-031e"><b>article number</b></th>
+      <th class="tg-031e"><b>supplier</b></th>
+      <th class="tg-031e"><b>quantity</b></th>
+      <th class="tg-031e"><b>price (single unit)</b></th>
+      <th class="tg-031e"><b>price (all units)</b></th>
+    </tr>
+    <tr>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221006225527/?ProductCode=UTPH7-S45CQ-D8-55&rid=MCOM">
+        Parallel Pin with Internal Thread ZR1</a></td>
+      <td class="tg-031e">UTPH7-S45CQ-D8-55</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">3.22 €</td>
+      <td class="tg-031e">3.22 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">2</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221006225527/?ProductCode=UTPH7-S45CQ-D8-70&rid=MCOM">
+        Parallel Pin with Internal Thread ZR2</a></td>
+      <td class="tg-031e">UTPH7-S45CQ-D8-70</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">4.84 €</td>
+      <td class="tg-031e">4.84 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">3</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/110300239250/?ProductCode=SCB5-12&rid=MCOM">
+        Screw M5; L12</a></td>
+      <td class="tg-031e">SCB5-12</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">2</td>
+      <td class="tg-031e">0.33 €</td>
+      <td class="tg-031e">0.66 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">4</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/222303324258/?KWSearch=pcb&searchFlow=results2products">
+        PCB connector Set</a></td>
+      <td class="tg-031e">072510-O/2</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">1.53 €</td>
+      <td class="tg-031e">1.53 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">5</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/222301933061/?ProductCode=09%200977%2000%2003&rid=MCOM">
+        Bayonet male connector</a></td>
+      <td class="tg-031e">09 0977 00 03</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">7.88 €</td>
+      <td class="tg-031e">7.88 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">6</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/222301933016/?ProductCode=09%200978%2000%2003&rid=MCOM">
+        Bayonet female connector</a></td>
+      <td class="tg-031e">09 0978 00 03</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">7.88 €</td>
+      <td class="tg-031e">7.88 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">7</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221303759170/?ProductCode=49075136&rid=MCOM">
+        O-ring</a></td>
+      <td class="tg-031e">49075136</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">6.45 €</td>
+      <td class="tg-031e">6.45 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">8</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221303450820/?ProductCode=933A2516&rid=MCOM">
+        Hexagon screws DIN 933</a></td>
+        <td class="tg-031e">933A2516</td>
+        <td class="tg-031e">MISUMI Europa GmbH</td>
+        <td class="tg-031e">5</td>
+        <td class="tg-031e">0.16 €</td>
+        <td class="tg-031e">0.80 €</td>
+      </tr>
+    <tr>
+      <td class="tg-031e">9</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/110300255710/?ProductCode=MSHHM5-20&rid=MCOM">
+        Dowel pin</a></td>
+      <td class="tg-031e">MSHHM5-20</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">6</td>
+      <td class="tg-031e">2.20 €</td>
+      <td class="tg-031e">13.20 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">10</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221000748262/?ProductCode=UD-45058&rid=MCOM">
+      Thread inserts</a></td>
+      <td class="tg-031e">UD-45058</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">5</td>
+      <td class="tg-031e">0.40 €</td>
+      <td class="tg-031e">2.00 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">11</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221005233794/?ProductCode=304STHN-8&rid=MCOM">
+      Screw-in Hose Fitting</a></td>
+      <td class="tg-031e">304STHN-8</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">8.33 €</td>
+      <td class="tg-031e">8.33 €</td>
+      </tr>
+    <tr>
+      <td class="tg-031e">12</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221000526974/?KWSearch=mutter%201%2f4B&searchFlow=results2products">
+      Lock Nut</a></td>
+      <td class="tg-031e">ALN-82008</td>
+      <td class="tg-031e">MISUMI Europa GmbH</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">1.40 €</td>
+      <td class="tg-031e">1.40 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">13</td>
+      <td class="tg-031e"><a href="https://uk.misumi-ec.com/vona2/detail/221005503592/">
+        40 mm transparent Hose PVC Resin</a></td>
+        <td class="tg-031e">4989999388145</td>
+        <td class="tg-031e">MISUMI Europa GmbH</td>
+        <td class="tg-031e">1</td>
+        <td class="tg-031e">0.072 € (1.793 €/m)</td>
+        <td class="tg-031e">0.072 €</td>
+      </tr>
+      <tr>
+        <td class="tg-031e">14</td>
+        <td class="tg-031e"><a href="https://www.conrad.de/de/p/imi-norgren-schlauchklemme-k-schl-10-1-st-581782.html">
+          Hose clamp</a></td>
+          <td class="tg-031e">4016138362589</td>
+          <td class="tg-031e">Conrad</td>
+          <td class="tg-031e">1</td>
+          <td class="tg-031e">1.29 €</td>
+          <td class="tg-031e">1.29 €</td>
+        </tr>
+    <tr>
+      <td class="tg-031e">15</td>
+      <td class="tg-031e"><a href="https://www.conrad.de/de/p/tru-components-tc-mmr6203-platinenhalter-selbstklebend-polyamid-abstandsmass-6-4-mm-1-st-1593471.html">
+        Pins for Printed circuit board</a></td>
+      <td class="tg-031e">4016139323718</td>
+      <td class="tg-031e">Conrad</td>
+      <td class="tg-031e">20</td>
+      <td class="tg-031e">0.22 €</td>
+      <td class="tg-031e">4.40 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">16</td>
+      <td class="tg-031e">Wooden board</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">local hardware store</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e">11.53 €</td>
+      <td class="tg-031e">11.53 €</td>
+    </tr>
+    <tr>
+      <td class="tg-031e">17</td>
+      <td class="tg-031e">Gearwheel</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">2</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">18</td>
+      <td class="tg-031e">Housing top</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">19</td>
+      <td class="tg-031e">Housing middle</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">20</td>
+      <td class="tg-031e">Housing bottom</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">21</td>
+      <td class="tg-031e">Cover plate</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">22</td>
+      <td class="tg-031e">Rotor</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">23</td>
+      <td class="tg-031e">PCB</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">24</td>
+      <td class="tg-031e">Fixation_0 on board</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">4</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">25</td>
+      <td class="tg-031e">Fixation_1 on board</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">3</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">26</td>
+      <td class="tg-031e">Fixation_2 on board</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">4</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">27</td>
+      <td class="tg-031e">Fixation_3 on board</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e">28</td>
+      <td class="tg-031e">Parts supply</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e">3d printed</td>
+      <td class="tg-031e">1</td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+    </tr>
+    <tr>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"></td>
+      <td class="tg-031e"><b>total</b></td>
+      <td class="tg-031e"><b>75.22 €</b></td>
+    </tr>
+  </table>
+</div>
+</div>
+</section>
+
+<section class="section hero">
+  <div class="container is-max-desktop">
+        <h2 class="title is-3">3D printer settings</h2>
+        <div class="content has-text-justified">
+          <p>
+            The 3D printed parts were printed using a Bambu Lab X1C. The settings files can be viewed (left-click, should open in browser) and downloaded (right-click, "save target as"/"save link as") here:
+            <ul>
+              <li><a href="static/3D_printer_settings/0.16mm Optimal @BBL X1C.json">0.16mm Optimal @BBL X1C.json</a></li>
+              <li><a href="static/3D_printer_settings/Bambu PLA Matte @base.json">Bambu PLA Matte @base.json</a></li>
+              <li><a href="static/3D_printer_settings/Bambu PLA Matte @BBL X1C.json">Bambu PLA Matte @BBL X1C.json</a></li>
+              <li><a href="static/3D_printer_settings/fdm_process_bbl_0.16.json">fdm_process_bbl_0.16.json</a></li>
+            </ul> 
+          </p>
+        </div>
+  </div>
+</section>
+
+<footer class="footer">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-8">

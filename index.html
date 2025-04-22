@@ -24,8 +24,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-  <title>Industrial Robotic Assembly Benchmark for Long-Horizon Manipulation</title>
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <title>LoHRA: Long-Horizon Robotic Assembly Benchmark</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.png">
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
   rel="stylesheet">
 
@@ -52,22 +52,15 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Industrial Robotic Assembly Benchmark for Long-Horizon Manipulation</h1>
+            <h1 class="title is-1 publication-title">LoHRA: Long-Horizon Robotic Assembly Benchmark</h1>
             <div class="is-size-5 publication-authors">
               <!-- Paper authors -->
               <span class="author-block">
-                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">Constantin Schempp</a>,</span>
-                <span class="author-block">
-                  <a href="SECOND AUTHOR PERSONAL LINK" target="_blank">Luca Kofler</a>,</span>
-                  <span class="author-block">
-                    <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Laura Suhm</a>,</span>
-                    <span class="author-block">
-                      <a href="FOURTH AUTHOR PERSONAL LINK" target="_blank">Christian Friedrich</a>
-                    </span>
+                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">removed for review</a>,</span>
                   </div>
 
                   <div class="is-size-5 publication-authors">
-                    <span class="author-block">Karlsruhe University of Applied Sciences<br>Conferance name and year</span>
+                    <span class="author-block">removed for review<br>removed for review.</span>
                   </div>
 
                   <div class="column has-text-centered">
@@ -152,18 +145,18 @@
 <!-- <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <video poster="" id="tree" autoplay controls muted loop height="100%"> -->
-        <!-- Your video here -->
-        <!-- <source src="static/videos/banner_video.mp4"
+      <video poster="" id="tree" autoplay controls muted loop height="100%">
+        <source src="static/videos/coverplate_move.mp4"
         type="video/mp4">
       </video>
       <h2 class="subtitle has-text-centered">
-        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
+        move to coverplate
       </h2>
     </div>
   </div>
 </section> -->
 <!-- End teaser video -->
+
 
 <!-- Paper abstract -->
 <section class="section hero is-light">
@@ -173,7 +166,16 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ullamcorper tellus sed ante aliquam tempus. Etiam porttitor urna feugiat nibh elementum, et tempor dolor mattis. Donec accumsan enim augue, a vulputate nisi sodales sit amet. Proin bibendum ex eget mauris cursus euismod nec et nibh. Maecenas ac gravida ante, nec cursus dui. Vivamus purus nibh, placerat ac purus eget, sagittis vestibulum metus. Sed vestibulum bibendum lectus gravida commodo. Pellentesque auctor leo vitae sagittis suscipit.
+            Robot learning has undergone significant advancements in the domain of compliant control and robotic assembly.
+            The development of novel methodologies has transcended the capacity to address discrete tasks, such as grasping or inserting, and has evolved to encompass the comprehensive construction of entire assemblies.
+            Conventional benchmarks, which are predominantly focused on isolated tasks, are no longer adequate to address the complexity and interconnected nature of modern manufacturing processes. 
+            Consequently, the necessity for benchmarks to encompass  a broader spectrum of assembly and subassembly steps is becoming apparent.
+            In light of these developments, we propose an industrial robotic assembly benchmark for long-horizon manipulation. 
+            This benchmark encompasses DIN-norm assembly tasks, including screwing, placing, inserting, and snapping, under both, high and low tolerance conditions.
+            The successive nature of these assembly steps implies that prior errors can influence subsequent manipulation.
+            Consequently, this benchmark is particularly relevant for assessing the robustness and failure recovery behavior of intelligent robotic systems.
+            The proposed benchmarking protocols and novel performance metric, based on a taxonomy of assembly complexity in conjunction with the comprehensive list of parts and their corresponding CAD models, serve as essential tools for research and development in the field.
+            To provide a baseline, we also solved the benchmark using traditional position-force-control.
           </p>
         </div>
       </div>
@@ -183,115 +185,61 @@
 <!-- End paper abstract -->
 
 
-<!-- Image carousel -->
-<!-- <section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item"> -->
-        <!-- Your image here -->
-        <!-- <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          First image description.
-        </h2>
-      </div>
-      <div class="item"> -->
-        <!-- Your image here -->
-        <!-- <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          Second image description.
-        </h2>
-      </div>
-      <div class="item"> -->
-        <!-- Your image here -->
-        <!-- <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-         Third image description.
-       </h2>
-     </div>
-     <div class="item"> -->
-      <!-- Your image here -->
-      <!-- <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
-      <h2 class="subtitle has-text-centered">
-        Fourth image description.
-      </h2>
-    </div>
+ 
+<section class="section hero">
+  <div class="container is-max-desktop">
+  <h2 class="title is-3">Assembly primitives solving the benchmark</h2>
   </div>
-</div>
-</div>
-</section> -->
-<!-- End image carousel -->
+  <div class="section columns is-centered" 
+        style="display: grid; 
+              grid-template-columns: repeat(8, 150px);
+              grid-template-rows: repeat(3, 110);
+              gap: 5px;"
+              >
+    <video src="static/videos/Coverplatte.mp4" width="150" height="100" autoplay muted loop playsinline playbackRate="2.0"></video>
+    <video src="static/videos/Gearwheel_Teeth_1.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Gearwheel_Teeth_2.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Housing_Middle.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Housing_Top.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Module.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/O-Ring.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/PCB.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Plug_inside_loose_1.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Plug_inside_loose_2.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Plug_outside_loose.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Positioning_Pin_1.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Positioning_Pin_2.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Positioning_Pin_3.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Positioning_Pin_4.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Positioning_Pin_5.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Positioning_Pin_6.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Rotor.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Screw_M5x16_1.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Screw_M5x16_2.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Screw_M5x16_3.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Screw_M5x16_4.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Screw_M5x16_5.mp4" width="150" height="100" autoplay muted loop playsinline></video>
+    <video src="static/videos/Tube.mp4" width="150" height="100" autoplay muted loop playsinline></video>
 
-
-<!-- Youtube video -->
-<!-- <section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container"> -->
-      <!-- Paper video. -->
-      <!-- <h2 class="title is-3">Video Presentation</h2>
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          
-          <div class="publication-video"> -->
-            <!-- Youtube embed code here -->
-            <!-- <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
-</section> -->
-<!-- End youtube video -->
-
-
-<!-- Video carousel -->
-<!-- <section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <video poster="" id="video1" autoplay controls muted loop height="100%"> -->
-            <!-- Your video file here -->
-            <!-- <source src="static/videos/carousel1.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <video poster="" id="video2" autoplay controls muted loop height="100%"> -->
-            <!-- Your video file here -->
-            <!-- <source src="static/videos/carousel2.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <video poster="" id="video3" autoplay controls muted loop height="100%">\ -->
-            <!-- Your video file here -->
-            <!-- <source src="static/videos/carousel3.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> -->
-<!-- End video carousel -->
-
+  </section>
+  <script>
+    // Set playback speed for all videos
+    document.querySelectorAll('video').forEach(video => {
+      video.playbackRate = 2.0; // Change this value as needed
+    });
+  </script>
 
 <!-- Paper poster -->
 <!-- <section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container">
       <h2 class="title">Poster</h2>
-
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
+      <iframe  src="static/pdfs/sample.pdf" width="50%" height="550"></iframe>
       </div>
     </div>
   </section> -->
 <!--End paper poster -->
-
 
 <!--BibTex citation -->
   <section class="section" id="BibTeX">
@@ -321,11 +269,6 @@
   </div>
 </footer>
 
-<!-- Statcounter tracking code -->
-  
-<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
-
-    <!-- End of Statcounter Code -->
 
   </body>
   </html>

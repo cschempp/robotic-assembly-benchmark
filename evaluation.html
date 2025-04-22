@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Industrial Robotic Assembly Benchmark for Long-Horizon Manipulation</title>
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.png">
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
   rel="stylesheet">
 
@@ -33,18 +33,11 @@
             <div class="is-size-5 publication-authors">
               <!-- Paper authors -->
               <span class="author-block">
-                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">Constantin Schempp</a>,</span>
-                <span class="author-block">
-                  <a href="SECOND AUTHOR PERSONAL LINK" target="_blank">Luca Kofler</a>,</span>
-                  <span class="author-block">
-                    <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Laura Suhm</a>,</span>
-                    <span class="author-block">
-                      <a href="FOURTH AUTHOR PERSONAL LINK" target="_blank">Christian Friedrich</a>
-                    </span>
+                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">removed for review</a>,</span>
                   </div>
 
                   <div class="is-size-5 publication-authors">
-                    <span class="author-block">Karlsruhe University of Applied Sciences<br>Conferance name and year</span>
+                    <span class="author-block">removed for review<br>removed for review.</span>
                   </div>
 
                   <div class="column has-text-centered">
@@ -118,6 +111,56 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section hero">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Performance evaluation</h2>    
+    <div class="content has-text-justified">
+      <p>
+        This document explains the benchmark process, its rules for the procedure and gives an
+        instruction for evaluation. The scoring sheets can be filled out manually or digitally.
+        The benchmark is built for comparing assembly processes on a realistic, industrial setup
+        completed by a robot, e.g. an UR5e. The benchmark includes subassemblies and numerous of
+        different processes. 46 tasks are fulfilled in one assembly run. The design is inspired from an
+        electric drive for e-bikes. The goal is to review and evaluate the assembly time and the
+        performance of the robot program related to single processes and complete assemblies. As a
+        result, it can identify strengths and potentials of robots in various assembly tasks.<br><br>
+
+        <b>Rules and constraints:</b><br>
+        The benchmark and its components must be in the starting position as it is shown below. 
+        A complete run of the assembly process must be executed by one gripper. It is not allowed to
+        change it during the procedure. 
+        Each assembly task rewards a certain number of points upon successful completion, depending on its complexity.
+
+        To fully evaluate the benchmark, the robot will complete the assembly process 5 times. All
+        processes are expected to be performed by the robot itself. After a failed attempt at a
+        particular process, manual assistance by a person is permitted, but the timer will continue and
+        not be paused.<br><br>
+        <img src="static/images/instructions_parts_positioning.jpg" style="width:400px">
+
+        <br><br>
+        <b>Scoring:</b><br>
+        [download benchmark_scoring_sheet.xlsx]<br>
+        <button class="btn"><i class="fa fa-download"></i><a href="static/evaluation/benchmark_protocol_template.xlsx">  Download</a></button>
+        <b>&rarr; benchmark_protocol_template.xlsx</b> <br>
+        <button class="btn"><i class="fa fa-download"></i><a href="static/evaluation/evaluation_script.py">  Download</a></button>
+        <b>&rarr; evaluation_script.py</b><br><br>
+        
+        Results of the assembly tasks have to be noted in the benchmark protocol using a binary value of 1 for success and 0 for failure.
+        The evaluation script provided can be used for easy evaluation, which evaluates the reliability and overall score for each individual assembly category.
+        
+        The protocol is structured in such a way that it can be used for the evaluation of any assembly.
+        When doing so, you have to add rows beneath the table header with corresponding names for the assembly processes in the column "process".
+        Furthermore, for each process, a category has to be defined, like grasping, screwing, insertion, reorient etc.
+        Finally, the complexity of each process has to be defined using our proposed taxonomy.
+        When using subassemblies, simply add a row called "subassembly N" beneath the related processes, where N is the nth subassembly, starting to count at 1.
+        For each repetition, add an extra column after "complexity_material".<br><br>
+        <img src="static/images/evaluation_template.png" style="width:900px">
+
+      </p>
     </div>
   </div>
 </section>
