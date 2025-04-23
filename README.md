@@ -1,4 +1,4 @@
-# LoHRA: Long-Horizon Robotic Assembly Benchmark
+# LABIT: Long-Horizon Robotic Assembly Benchmark for Industrial Tasks
 Robot learning has undergone significant advancements in the domain of compliant control and robotic assembly.
 The development of novel methodologies has transcended the capacity to address discrete tasks, such as grasping or inserting, and has evolved to encompass the comprehensive construction of entire assemblies.
 Conventional benchmarks, which are predominantly focused on isolated tasks, are no longer adequate to address the complexity and interconnected nature of modern manufacturing processes. 
