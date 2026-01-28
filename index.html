@@ -67,8 +67,8 @@
                     <div class="publication-links">
                       <!-- Arxiv PDF link -->
                       <span class="link-block">
-                        <!-- <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
-                        class="external-link button is-normal is-rounded is-dark"> -->
+                        <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
+                        class="external-link button is-normal is-rounded is-dark">
                         <span class="icon">
                           <i class="fas fa-file-pdf"></i>
                         </span>
@@ -188,7 +188,7 @@
  
 <section class="section hero">
   <div class="container is-max-desktop">
-  <h2 class="title is-3">Assembly primitives solving the benchmark</h2>
+  <h2 class="title is-3">Real Environment</h2>
   <p>(loading of videos may take a few seconds)</p>
   </div>
   <!-- 3 x 8, 150 x 110 px -->
@@ -196,7 +196,7 @@
         style="display: grid; 
               grid-template-columns: repeat(1, 960px); 
               grid-template-rows: repeat(1, 540px);
-              gap: 5px;"
+              "
               >
     <video src="static/videos/all_in_one.mp4" width="960" height="540" autoplay muted loop playsinline playbackRate="2.0"></video>
     <!-- <video src="static/videos/Coverplatte.mp4" width="150" height="100" autoplay muted loop playsinline playbackRate="2.0"></video>
@@ -225,6 +225,21 @@
     <video src="static/videos/Tube.mp4" width="150" height="100" autoplay muted loop playsinline></video> -->
 
   </div>
+  <div class="container is-max-desktop">
+  <h2 class="title is-3">Simulation Environment</h2>
+  <p>(loading of videos may take a few seconds)</p>
+  </div>
+  <!-- 3 x 8, 150 x 110 px -->
+  <div class="section columns is-centered" 
+        style="display: grid; 
+              grid-template-columns: repeat(1, 1280px); 
+              grid-template-rows: repeat(2, 720px);
+              "
+              >
+    <video src="static/videos/video_sim_default_view.mp4" width="1280" height="720" autoplay muted loop playsinline playbackRate="2.0"></video>
+    <video src="static/videos/video_sim_top_view.mp4" width="1280" height="720" autoplay muted loop playsinline playbackRate="2.0"></video>
+    </div>
+
   </section>
   <script>
     // Set playback speed for all videos
