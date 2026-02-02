@@ -55,7 +55,7 @@
     <h2 class="title is-3">Download</h2>    
     <div class="content has-text-justified">
       <p>
-        The dataset is published on zenodo. Click the following link to get there. <a href="https://zenodo.org/" target="_blank">https://zenodo.org/</a>.
+        The dataset is published on zenodo. Click the following link to get there. <a href="https://zenodo.org/" target="_blank">https://zenodo.org/</a>.<br>
         The dataset is provided in a unified HDF5 format, including:
         <ul>
           <li>Wrench (Force/Torque): 3-axis force, 3-axis torque sampled.</li>
@@ -77,11 +77,11 @@
           <li>/depth/data: [K, H, W, 3] depth image stream</li>
           <li>/depth/timestamps: [K] array of aligned timestamps</li>
         </ul>
-        <br><br>
+        <br>
         Dataset contains five trial folders. Each trial folder consists of subfolders representing the assembly subtasks. In each subtask folder, the data of the executed movement and assembly primitives are saved as .h5 files:
-        <br>
-        trial_XY/subtaskname/timestamp_asm_subtaskname_primitivename.h5
-        <br>
+        <br><br>
+        <blockquote>trial_XY/subtaskname/timestamp_asm_subtaskname_primitivename.h5</blockquote>
+        <br><br>
         Where trial_XY can be one of [trial_0, trial_1, trial_2, trial_3, trial_4].
       </p>
       <h2 class="title is-3">Dataset preview</h2>
