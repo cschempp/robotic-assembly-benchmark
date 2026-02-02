@@ -55,8 +55,34 @@
     <h2 class="title is-3">Download</h2>    
     <div class="content has-text-justified">
       <p>
-        The dataset is published on zenodo. Click the following link to get there.
-        <a href="https://zenodo.org/" target="_blank">https://zenodo.org/</a>
+        The dataset is published on zenodo. Click the following link to get there. <a href="https://zenodo.org/" target="_blank">https://zenodo.org/</a>.
+        The dataset is provided in a unified HDF5 format, including:
+        <ul>
+          <li>Wrench (Force/Torque): 3-axis force, 3-axis torque sampled.</li>
+          <li>Robot State: 6-DOF joint positions, velocities and efforts.</li>
+          <li>End-Effector Pose: 6-DOF Cartesian poses (position + quaternion).</li>
+          <li>Vision: RGB and Depth images.</li>
+        </ul>
+        <br>
+        The dataset structure is as follows: <br>
+        <ul>
+          <li>/wrench/data: [N, 6] array of forces and torques</li>
+          <li>/wrench/timestamps: [N] array of aligned timestamps</li>
+          <li>/pose/data: [M, 7] array of cartesian poses</li>
+          <li>/pose/timestamps [M] array of aligned timestamps</li>
+          <li>/joint_states/data: [M, 3, 6] array of joint states</li>
+          <li> /joint_states/timestamps [M] array of aligned timestamps</li>
+          <li>/rgb/data: [K, H, W, 3] rgb image stream</li>
+          <li>/rgb/timestamps: [K] array of aligned timestamps</li>
+          <li>/depth/data: [K, H, W, 3] depth image stream</li>
+          <li>/depth/timestamps: [K] array of aligned timestamps</li>
+        </ul>
+        <br><br>
+        Dataset contains five trial folders. Each trial folder consists of subfolders representing the assembly subtasks. In each subtask folder, the data of the executed movement and assembly primitives are saved as .h5 files:
+        <br>
+        trial_XY/subtaskname/timestamp_asm_subtaskname_primitivename.h5
+        <br>
+        Where trial_XY can be one of [trial_0, trial_1, trial_2, trial_3, trial_4].
       </p>
       <h2 class="title is-3">Dataset preview</h2>
       <p>A preview of the dataset can be viewed using rerun in your browser. Click
