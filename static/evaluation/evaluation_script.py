@@ -19,6 +19,7 @@ class AssemblyBenchmark():
         self.load_csv(filepath)
         self._init_categories()
         self.cm = 1 / 2.54  # centimeters to inches
+        # self.category_colors = plt.cm.Pastel2.colors[:len(self.categories)]
         self.category_colors = plt.cm.Blues.resampled(len(self.categories))(range(len(self.categories)))
 
     def _init_categories(self):
@@ -28,10 +29,18 @@ class AssemblyBenchmark():
 
     def load_csv(self, filepath: str):
         self.dataframe = pd.read_excel(filepath)
+        # Merged "subtask" cells only carry a value in their top row; fill downward
+        # within primitive rows (rows that have a numeric ID) so each primitive knows its subtask.
+        primitive_mask = self.dataframe["ID"].notna()
+        self.dataframe.loc[primitive_mask, "subtask"] = (
+            self.dataframe.loc[primitive_mask, "subtask"].ffill()
+        )
 
     def evaluate(self):
+        trial_cols = [c for c in self.dataframe.columns if isinstance(c, int)]
+
         for idx, row in self.dataframe.iterrows():
-            success_ = row[7:]
+            success_ = row[trial_cols]
             repetitions = len(success_)
             complexity_tolerance = row["complexity_tolerance"]
             complexity_geometry = row["complexity_geometry"]
@@ -44,7 +53,7 @@ class AssemblyBenchmark():
             self.dataframe.loc[idx, "difficulty"] = difficulty
             self.dataframe.loc[idx, "score"] = score
 
-        indices = np.squeeze(np.where(["subassembly" in process for process in self.dataframe["process"]]))
+        indices = np.squeeze(np.where(["subassembly" in primitive for primitive in self.dataframe["primitive"]]))
         for i in range(len(indices)):
             if i == 0:
                 self.dataframe.loc[indices[i], "reliability"] = np.prod(self.dataframe["reliability"][0:indices[i]])
@@ -55,7 +64,7 @@ class AssemblyBenchmark():
                 self.dataframe.loc[indices[i], "score"] = np.sum(self.dataframe["score"][indices[i-1]+1:indices[i]])
                 self.dataframe.loc[indices[i], "difficulty"] = np.sum(self.dataframe["difficulty"][indices[i-1]+1:indices[i]])
 
-        self.idx_asm = int(np.squeeze(np.where(self.dataframe["process"] == "assembly")))
+        self.idx_asm = int(np.squeeze(np.where(self.dataframe["primitive"] == "assembly")))
         rels = self.dataframe.loc[indices, "reliability"]
         self.dataframe.loc[self.idx_asm, "reliability"] = np.prod(rels.to_numpy())
         scores = self.dataframe.loc[indices, "score"]
@@ -64,7 +73,19 @@ class AssemblyBenchmark():
         self.dataframe.loc[self.idx_asm, "difficulty"] = np.sum(diffs.to_numpy())
         self.sorted_data = self.dataframe.sort_values(by="ID")
 
-    def _plot_subtask_reliability(self):
+        # Subtask reliability: a trial counts only when ALL primitives of the subtask succeeded.
+        # Subtask score: sum of primitive scores; max score: sum of primitive difficulties.
+        primitive_rows = self.dataframe[self.dataframe["ID"].notna()]
+        self.subtask_reliability = {}
+        self.subtask_scores = {}
+        self.subtask_max_scores = {}
+        for subtask_name, group in primitive_rows.groupby("subtask", sort=False):
+            per_trial_success = (group[trial_cols] == 1).all(axis=0)
+            self.subtask_reliability[subtask_name] = float(per_trial_success.mean())
+            self.subtask_scores[subtask_name] = float(group["score"].sum())
+            self.subtask_max_scores[subtask_name] = float(group["difficulty"].sum())
+
+    def _plot_primitive_reliability(self):
         fig, ax = plt.subplots(figsize=(21 * self.cm, 10 * self.cm))
         ids = self.dataframe["ID"]
         subtask_idx = ~np.isnan(ids)
@@ -72,13 +93,13 @@ class AssemblyBenchmark():
         reliability = self.dataframe["reliability"][subtask_idx] * 100
         
         ax.bar(ids, reliability, color=self.category_colors[-1], width=0.6)
-        ax.set_title("Reliability of each subtask")
+        ax.set_title("Reliability of each primitive")
         ax.set_xticks(np.arange(min(ids), max(ids) + 1))
         ax.set_xticklabels(ids.to_numpy(dtype=int))
-        ax.set_xlabel("Subtask $i$")
+        ax.set_xlabel("Primitive $i$")
         ax.set_ylabel("Reliability $R_i$ [%]")
         plt.tight_layout()
-        plt.savefig("01_subtask_reliability.png", dpi=300, bbox_inches='tight')
+        plt.savefig("01_primitive_reliability.png", dpi=300, bbox_inches='tight')
         plt.close()
 
     def _plot_category_reliability(self):
@@ -100,7 +121,7 @@ class AssemblyBenchmark():
         plt.savefig("02_category_reliability.png", dpi=300, bbox_inches='tight')
         plt.close()
 
-    def _plot_subtask_scores(self):
+    def _plot_primitive_scores(self):
         fig, ax = plt.subplots(figsize=(22 * self.cm, 10 * self.cm))
         ids = self.dataframe["ID"]
         subtask_idx = ~np.isnan(ids)
@@ -108,41 +129,53 @@ class AssemblyBenchmark():
         scores = self.dataframe["score"][subtask_idx]
         
         ax.bar(ids, scores, color=self.category_colors[-1], width=0.6)
-        ax.set_title("Score of each subtask")
+        ax.set_title("Score of each primitive")
         ax.set_xticks(np.arange(min(ids), max(ids) + 1))
         ax.set_xticklabels(ids.to_numpy(dtype=int))
-        ax.set_xlabel("Subtask $i$")
+        ax.set_xlabel("Primitive $i$")
         ax.set_ylabel("Score $S_i$")
         plt.tight_layout()
-        plt.savefig("01b_subtask_scores.png", dpi=300, bbox_inches='tight')
+        plt.savefig("01b_primitive_scores.png", dpi=300, bbox_inches='tight')
         plt.close()
 
     def _plot_score_by_category(self):
-        fig, ax = plt.subplots(figsize=(11 * self.cm, 10 * self.cm))
-        category_scores = [
-            self.dataframe.loc[self.dataframe["category"] == category, "score"].sum()
-            for category in self.categories
-        ]
-        category_difficulties = [
-            self.dataframe.loc[self.dataframe["category"] == category, "difficulty"].sum()
-            for category in self.categories
-        ]
-        bottom_scores, bottom_difficulties = 0, 0
-        for score, max_score, color, category in zip(category_scores, category_difficulties, self.category_colors, self.categories):
-            ax.bar(["Total Score"], [score], bottom=bottom_scores, color=color, edgecolor="black", label=category)
-            bottom_scores += score
-            ax.bar(["Max Score"], [max_score], bottom=bottom_difficulties, color=color, edgecolor="black")
-            bottom_difficulties += max_score
-        ax.set_title("Total score contribution by category")
-        ax.set_ylabel("Score $S_c$")
-        ax.legend(loc="upper right")
+        handling_categories = [c for c in self.categories if c.lower() in ("grasp", "reorient")]
+        joining_categories = [c for c in self.categories if c.lower() not in ("grasp", "reorient")]
+
+        handling_colors = plt.cm.Blues.resampled(len(handling_categories))(range(len(handling_categories))) if handling_categories else []
+        joining_colors = plt.cm.Blues.resampled(len(joining_categories))(range(len(joining_categories))) if joining_categories else []
+
+        fig, axes = plt.subplots(1, 2, figsize=(18 * self.cm, 10 * self.cm))
+
+        for ax, group_categories, group_colors, title in [
+            (axes[0], handling_categories, handling_colors, "Handling categories"),
+            (axes[1], joining_categories, joining_colors, "Joining categories"),
+        ]:
+            group_scores = [
+                self.dataframe.loc[self.dataframe["category"] == cat, "score"].sum()
+                for cat in group_categories
+            ]
+            group_difficulties = [
+                self.dataframe.loc[self.dataframe["category"] == cat, "difficulty"].sum()
+                for cat in group_categories
+            ]
+            bottom_scores, bottom_difficulties = 0, 0
+            for score, max_score, color, category in zip(group_scores, group_difficulties, group_colors, group_categories):
+                ax.bar(["Total Score"], [score], bottom=bottom_scores, color=color, edgecolor="black", label=category)
+                bottom_scores += score
+                ax.bar(["Max Score"], [max_score], bottom=bottom_difficulties, color=color, edgecolor="black")
+                bottom_difficulties += max_score
+            ax.set_title(title)
+            ax.set_ylabel("Score $S_c$")
+            ax.legend(loc="upper right")
+
         plt.tight_layout()
         plt.savefig("03_score_by_category.png", dpi=300, bbox_inches='tight')
         plt.close()
 
     def _plot_score_by_subassembly(self):
         fig, ax = plt.subplots(figsize=(11 * self.cm, 10 * self.cm))
-        subassembly_indices = self.dataframe[self.dataframe["process"].str.contains("subassembly")].index
+        subassembly_indices = self.dataframe[self.dataframe["primitive"].str.contains("subassembly")].index
         subassembly_scores = [
             self.dataframe.loc[:sub_idx - 1, "score"].sum() if i == 0 else self.dataframe.loc[subassembly_indices[i - 1] + 1:sub_idx - 1, "score"].sum()
             for i, sub_idx in enumerate(subassembly_indices)
@@ -168,7 +201,7 @@ class AssemblyBenchmark():
         plt.close()
 
     def _create_summary_table(self):
-        subassembly_indices = self.dataframe[self.dataframe["process"].str.contains("subassembly")].index
+        subassembly_indices = self.dataframe[self.dataframe["primitive"].str.contains("subassembly")].index
         subassembly_scores = [
             self.dataframe.loc[:sub_idx - 1, "score"].sum() if i == 0 else self.dataframe.loc[subassembly_indices[i - 1] + 1:sub_idx - 1, "score"].sum()
             for i, sub_idx in enumerate(subassembly_indices)
@@ -242,14 +275,14 @@ class AssemblyBenchmark():
             difficulty = int(row["difficulty"])
             score = f"{row['score']:.2f}"
 
-            if "assembly" in row["process"]:
-                table_data.append([row["process"], "", reliability, difficulty, score])
-            elif "subassembly" in row["process"]:
+            if "assembly" in row["primitive"]:
+                table_data.append([row["primitive"], "", reliability, difficulty, score])
+            elif "subassembly" in row["primitive"]:
                 if current_subassembly is not None:
                     subassembly_ranges.append((current_subassembly, start_idx, len(table_data) - 1))
-                current_subassembly = row["process"]
+                current_subassembly = row["primitive"]
                 start_idx = len(table_data)
-                table_data.append([row["process"], "", reliability, difficulty, score])
+                table_data.append([row["primitive"], "", reliability, difficulty, score])
             else:
                 table_data.append(["", int(row["ID"]), reliability, difficulty, score])
 
@@ -292,28 +325,345 @@ class AssemblyBenchmark():
         plt.savefig("06_detailed_table.png", dpi=300, bbox_inches='tight')
         plt.close()
 
+    def _plot_subtask_reliability(self):
+        fig, ax = plt.subplots(figsize=(21 * self.cm, 10 * self.cm))
+        subtask_names = list(self.subtask_reliability.keys())
+        reliabilities = [self.subtask_reliability[s] * 100 for s in subtask_names]
+        x_pos = np.arange(len(subtask_names))
+        ax.bar(x_pos, reliabilities, color=self.category_colors[-1], width=0.6)
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(subtask_names, rotation=45, ha='right')
+        ax.set_xlabel("Subtask")
+        ax.set_ylabel("Reliability $R_{st}$ [%]")
+        ax.set_ylim([0, 100])
+        ax.set_title("Reliability of each subtask")
+        ax.grid(axis='y', alpha=0.3)
+        plt.tight_layout()
+        plt.savefig("09_subtask_reliability.png", dpi=300, bbox_inches='tight')
+        plt.close(fig)
+
+    def _plot_subtask_score(self):
+        fig, ax = plt.subplots(figsize=(21 * self.cm, 10 * self.cm))
+        subtask_names = list(self.subtask_scores.keys())
+        scores = [self.subtask_scores[s] for s in subtask_names]
+        max_scores = [self.subtask_max_scores[s] for s in subtask_names]
+        x_pos = np.arange(len(subtask_names))
+        ax.bar(x_pos, max_scores, color="lightblue", width=0.6, label="max. score")
+        ax.bar(x_pos, scores, color=self.category_colors[-1], width=0.6, label="achieved score")
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(subtask_names, rotation=45, ha='right')
+        ax.set_xlabel("Subtask")
+        ax.set_ylabel("Score $S_{st}$")
+        ax.set_title("Score of each subtask")
+        ax.legend(frameon=False)
+        ax.grid(axis='y', alpha=0.3)
+        plt.tight_layout()
+        plt.savefig("10_subtask_score.png", dpi=300, bbox_inches='tight')
+        plt.close(fig)
+
+    def _export_latex_table(self, max_data_cols: int = 10):
+        """Transposed layout matching the reference image.
+
+        Columns are primitives grouped by subtask; rows are attributes
+        (ID, category, R, score).  Each subtask gets one extra "total" column
+        on its right.  Subtasks are packed into blocks of at most
+        *max_data_cols* data columns; when a block is full a new block starts
+        below (same SA).  Each subassembly gets a bold label line before its
+        blocks.
+
+        Required LaTeX packages: booktabs, tabular* (standard), array.
+        """
+        def esc(s):
+            return str(s).replace("_", r"\_").replace("%", r"\%").replace("&", r"\&")
+
+        def fmt_r(r_pct):
+            return f"{r_pct:.0f}"
+
+        def fmt_score(score, max_score):
+            s = f"{score:g}"
+            return f"{s} / {int(max_score)}"
+
+        # Build ordered structure: [(sa_name, [(subtask_name, [prim_rows])])]
+        # SA summary rows sit AFTER their primitives in the dataframe; when we
+        # encounter the SA row we know the name to assign to the buffered group.
+        structure = []
+        buf: list = []          # subtasks accumulated for the current SA
+        current_subtask: str | None = None
+
+        for _, row in self.dataframe.iterrows():
+            prim = row["primitive"]
+            if prim == "assembly":
+                continue
+            elif "subassembly" in prim:
+                structure.append((prim, buf))
+                buf = []
+                current_subtask = None
+            else:
+                subtask = row["subtask"]
+                if subtask != current_subtask:
+                    current_subtask = subtask
+                    buf.append((subtask, []))
+                buf[-1][1].append(row)
+
+        N = 1 + max_data_cols  # label col + data cols
+        col_spec = f"p{{2.3cm}}@{{\\extracolsep{{\\fill}}}}" + "c" * max_data_cols
+
+        lines = []
+        lines.append(r"% Required packages: booktabs, array")
+        lines.append(r"% Wrap in {\footnotesize ...} or a table float as needed.")
+        lines.append(r"\setlength{\tabcolsep}{3pt}")
+        lines.append(r"\renewcommand{\arraystretch}{0.85}")
+        lines.append(f"\\begin{{tabular*}}{{\\linewidth}}{{{col_spec}}}")
+        lines.append(r"\toprule")
+
+        for sa_idx, (sa_name, subtasks) in enumerate(structure):
+            # Split subtasks into blocks; each subtask occupies (n_prims + 1) columns.
+            blocks: list[list] = []
+            cur_block: list = []
+            cur_cols = 0
+            for st_name, prims in subtasks:
+                n = len(prims) + 1
+                if cur_block and cur_cols + n > max_data_cols:
+                    blocks.append(cur_block)
+                    cur_block = []
+                    cur_cols = 0
+                cur_block.append((st_name, prims))
+                cur_cols += n
+            if cur_block:
+                blocks.append(cur_block)
+
+            # SA separator: midrule before every SA except the first
+            if sa_idx > 0:
+                lines.append(r"\midrule")
+
+            # SA header row spanning all columns
+            lines.append(
+                f"\\multicolumn{{{N}}}{{l}}{{\\textbf{{{esc(sa_name)}}}}}" + r" \\"
+            )
+            lines.append(r"\midrule")
+
+            for block_idx, block in enumerate(blocks):
+                if block_idx > 0:
+                    lines.append(r"\addlinespace[4pt]")
+
+                block_cols = sum(len(prims) + 1 for _, prims in block)
+                pad = max_data_cols - block_cols
+
+                # ── Row 1: subtask names + "total" headers ─────────────────────
+                r1 = [r"\textit{subtask}"]
+                for st_name, prims in block:
+                    n_p = len(prims)
+                    r1.append(f"\\multicolumn{{{n_p}}}{{c}}{{{esc(st_name)}}}")
+                    r1.append("total")
+                if pad > 0:
+                    r1.append(f"\\multicolumn{{{pad}}}{{c}}{{}}")
+                lines.append(" & ".join(r1) + r" \\")
+
+                # Partial rules under each subtask's primitive columns
+                col_idx = 2
+                cmids = []
+                for _, prims in block:
+                    n_p = len(prims)
+                    cmids.append(f"\\cmidrule(lr){{{col_idx}-{col_idx + n_p - 1}}}")
+                    col_idx += n_p + 1
+                lines.append("".join(cmids))
+
+                # ── Row 2: primitive IDs ───────────────────────────────────────
+                r2 = ["ID"]
+                for _, prims in block:
+                    for prow in prims:
+                        r2.append(str(int(prow["ID"])))
+                    r2.append("")
+                r2.extend([""] * pad)
+                lines.append(" & ".join(r2) + r" \\")
+
+                # ── Row 3: categories ──────────────────────────────────────────
+                r3 = ["Cat."]
+                for _, prims in block:
+                    for prow in prims:
+                        cat = esc(prow["category"]) if pd.notna(prow["category"]) else ""
+                        r3.append(cat)
+                    r3.append("")
+                r3.extend([""] * pad)
+                lines.append(" & ".join(r3) + r" \\")
+
+                lines.append(r"\midrule")
+
+                # ── Row 4: reliability ─────────────────────────────────────────
+                r4 = [r"$R$\,[\%]"]
+                for st_name, prims in block:
+                    for prow in prims:
+                        r4.append(fmt_r(prow["reliability"] * 100))
+                    st_r = self.subtask_reliability.get(st_name, 0) * 100
+                    r4.append(fmt_r(st_r))
+                r4.extend([""] * pad)
+                lines.append(" & ".join(r4) + r" \\")
+
+                # ── Row 5: score (achieved / max) ──────────────────────────────
+                r5 = ["Score"]
+                for st_name, prims in block:
+                    for prow in prims:
+                        r5.append(fmt_score(prow["score"], prow["difficulty"]))
+                    st_score = self.subtask_scores.get(st_name, 0)
+                    st_max = self.subtask_max_scores.get(st_name, 0)
+                    r5.append(fmt_score(st_score, st_max))
+                r5.extend([""] * pad)
+                lines.append(" & ".join(r5) + r" \\")
+
+        lines.append(r"\bottomrule")
+        lines.append(r"\end{tabular*}")
+
+        with open("11_score_reliability_table.tex", "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+        print("LaTeX table saved as 11_score_reliability_table.tex")
+
+    def _export_latex_summary_tables(self):
+        """Export compact summary tables for categories, subtasks, and subassemblies.
+
+        Writes 12_summary_tables.tex with three tabular* environments:
+          1. Category table  – per-category R stats and score
+          2. Subtask table   – per-subtask R and score, grouped by SA
+          3. Subassembly table – per-SA R and score
+        Required packages: booktabs, array.
+        """
+        def esc(s):
+            return str(s).replace("_", r"\_").replace("%", r"\%").replace("&", r"\&")
+
+        def fmt_r(r_frac):
+            return f"{r_frac * 100:.0f}"
+
+        def fmt_score(score, max_score):
+            s = f"{score:g}"
+            return f"{s} / {int(max_score)}"
+
+        lines = []
+        lines.append(r"% Required packages: booktabs, array")
+        lines.append(r"% Wrap blocks in {\footnotesize ...} or table floats as needed.")
+        lines.append(r"\setlength{\tabcolsep}{4pt}")
+        lines.append(r"\renewcommand{\arraystretch}{0.9}")
+
+        # ── Table 1: Category ────────────────────────────────────────────────
+        lines.append("")
+        lines.append(r"\noindent\textbf{Scores and reliability by category}\par\noindent")
+        lines.append(r"\begin{tabular*}{\linewidth}{p{2.5cm}@{\extracolsep{\fill}}ccccc}")
+        lines.append(r"\toprule")
+        lines.append(
+            r"Category & $N$ & $R_{\min}$\,[\%] & $\bar{R}$\,[\%] & "
+            r"$R_{\max}$\,[\%] & Score \\"
+        )
+        lines.append(r"\midrule")
+        primitive_rows = self.dataframe[self.dataframe["ID"].notna()]
+        for cat in self.categories:
+            cat_rows = primitive_rows[primitive_rows["category"] == cat]
+            n = len(cat_rows)
+            rels = cat_rows["reliability"]
+            r_min = fmt_r(rels.min())
+            r_mean = fmt_r(rels.mean())
+            r_max = fmt_r(rels.max())
+            score = cat_rows["score"].sum()
+            max_score = cat_rows["difficulty"].sum()
+            lines.append(
+                f"{esc(cat)} & {n} & {r_min} & {r_mean} & {r_max} & "
+                f"{fmt_score(score, max_score)} \\\\"
+            )
+        lines.append(r"\bottomrule")
+        lines.append(r"\end{tabular*}")
+
+        # ── Table 2: Subtask (grouped by SA) ────────────────────────────────
+        lines.append("")
+        lines.append(r"\smallskip")
+        lines.append(r"\noindent\textbf{Scores and reliability by subtask}\par\noindent")
+        lines.append(r"\begin{tabular*}{\linewidth}{p{4cm}@{\extracolsep{\fill}}cc}")
+        lines.append(r"\toprule")
+        lines.append(r"Subtask & $R$\,[\%] & Score \\")
+        lines.append(r"\midrule")
+
+        # Reuse the same SA-buffer pattern as _export_latex_table
+        structure = []
+        buf: list = []
+        current_subtask: str | None = None
+        for _, row in self.dataframe.iterrows():
+            prim = row["primitive"]
+            if prim == "assembly":
+                continue
+            elif "subassembly" in prim:
+                structure.append((prim, buf))
+                buf = []
+                current_subtask = None
+            else:
+                subtask = row["subtask"]
+                if subtask != current_subtask:
+                    current_subtask = subtask
+                    buf.append(subtask)
+
+        first_sa = True
+        for sa_name, subtask_names in structure:
+            if not first_sa:
+                lines.append(r"\midrule")
+            first_sa = False
+            lines.append(
+                f"\\multicolumn{{3}}{{l}}{{\\textbf{{{esc(sa_name)}}}}}" + r" \\"
+            )
+            lines.append(r"\midrule")
+            for st_name in subtask_names:
+                r_val = fmt_r(self.subtask_reliability.get(st_name, 0))
+                score = self.subtask_scores.get(st_name, 0)
+                max_score = self.subtask_max_scores.get(st_name, 0)
+                lines.append(f"{esc(st_name)} & {r_val} & {fmt_score(score, max_score)} \\\\")
+
+        lines.append(r"\bottomrule")
+        lines.append(r"\end{tabular*}")
+
+        # ── Table 3: Subassembly ─────────────────────────────────────────────
+        lines.append("")
+        lines.append(r"\smallskip")
+        lines.append(r"\noindent\textbf{Scores and reliability by subassembly}\par\noindent")
+        lines.append(r"\begin{tabular*}{\linewidth}{p{3cm}@{\extracolsep{\fill}}cc}")
+        lines.append(r"\toprule")
+        lines.append(r"Subassembly & $R$\,[\%] & Score \\")
+        lines.append(r"\midrule")
+        sa_rows = self.dataframe[self.dataframe["primitive"].str.contains("subassembly")]
+        for i, (_, row) in enumerate(sa_rows.iterrows()):
+            sa_label = f"SA{i + 1}"
+            r_val = fmt_r(row["reliability"])
+            score = row["score"]
+            max_score = row["difficulty"]
+            lines.append(f"{sa_label} & {r_val} & {fmt_score(score, max_score)} \\\\")
+        lines.append(r"\bottomrule")
+        lines.append(r"\end{tabular*}")
+
+        with open("12_summary_tables.tex", "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+        print("Summary tables saved as 12_summary_tables.tex")
+
     def generate_evaluation_protocol(self):
         """Generate individual PNG plots and combined PDF protocol"""
-        self._plot_subtask_reliability()
+        self._plot_primitive_reliability()
         self._plot_category_reliability()
 
-        self._plot_subtask_scores()
+        self._plot_primitive_scores()
         self._plot_score_by_category()
         self._plot_score_by_subassembly()
 
         self._plot_summary_table()
         self._plot_detailed_table()
+        self._plot_subtask_reliability()
+        self._plot_subtask_score()
+        self._export_latex_table()
+        self._export_latex_summary_tables()
 
         # Create combined PDF
         pdf_filename = "evaluation_protocol.pdf"
         with PdfPages(pdf_filename) as pdf:
             figs = [
-                "01_subtask_reliability.png",
+                "01_primitive_reliability.png",
                 "02_category_reliability.png",
                 "03_score_by_category.png",
                 "04_score_by_subassembly.png",
                 "05_summary_table.png",
-                "06_detailed_table.png"
+                "06_detailed_table.png",
+                "09_subtask_reliability.png",
+                "10_subtask_score.png",
             ]
             for fig_file in figs:
                 if os.path.exists(fig_file):
@@ -328,115 +678,141 @@ class AssemblyBenchmark():
         print("Individual plots saved as 01_*.png through 06_*.png")
 
     def _plot_combined_scores(self):
-        """Plot subtask scores, category scores, and subassembly scores in one figure"""
-        fig = plt.figure(figsize=(21 * self.cm, 5 * self.cm))
-        gs = fig.add_gridspec(1, 3, width_ratios=[6, 2, 2])
-        axes = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[0, 2])]
-        
-        # Plot 1: Subtask scores
+        """2×2 grid: primitive scores (top-left), category scores (top-right),
+        subtask scores (bottom-left), subassembly scores (bottom-right)."""
+        fig, axes = plt.subplots(2, 2, figsize=(21 * self.cm, 10 * self.cm),
+                                 gridspec_kw={"width_ratios": [3, 2]})
+
+        # Top-left: primitive scores
         ids = self.dataframe["ID"]
-        subtask_idx = ~np.isnan(ids)
-        ids = ids[subtask_idx]
-        scores = self.dataframe["score"][subtask_idx]
-        difficulties = self.dataframe["difficulty"][subtask_idx]
-        
-        axes[0].bar(ids, difficulties, color="lightblue", width=0.6, label="max. score")
-        axes[0].bar(ids, scores, color=self.category_colors[-1], width=0.6, label="achieved score")
-        axes[0].set_xticks(np.arange(min(ids), max(ids) + 1)[::2])
-        axes[0].set_xticklabels(ids.to_numpy(dtype=int)[::2])
-        axes[0].set_xlabel("Subtask $i$")
-        axes[0].set_ylabel("Score $S_i$")
-        axes[0].grid(axis='y', alpha=0.3)
-        axes[0].legend(loc="upper left", bbox_to_anchor=(0.0, 1.2), ncol=2, frameon=False)
-        
-        # Plot 2: Score by category (bar per category)
+        prim_idx = ~np.isnan(ids)
+        ids = ids[prim_idx]
+        scores = self.dataframe["score"][prim_idx]
+        difficulties = self.dataframe["difficulty"][prim_idx]
+        axes[0, 0].bar(ids, difficulties, color="lightblue", width=0.6, label="max. score")
+        axes[0, 0].bar(ids, scores, color=self.category_colors[-1], width=0.6, label="achieved score")
+        axes[0, 0].set_xticks(np.arange(min(ids), max(ids) + 1)[::2])
+        axes[0, 0].set_xticklabels(ids.to_numpy(dtype=int)[::2])
+        axes[0, 0].set_xlabel("Primitive $i$")
+        axes[0, 0].set_ylabel("Score $S_i$")
+        axes[0, 0].grid(axis='y', alpha=0.3)
+
+        # Top-right: category scores
         category_scores = [
-            self.dataframe.loc[self.dataframe["category"] == category, "score"].sum()
-            for category in self.categories
+            self.dataframe.loc[self.dataframe["category"] == c, "score"].sum()
+            for c in self.categories
         ]
         category_difficulties = [
-            self.dataframe.loc[self.dataframe["category"] == category, "difficulty"].sum()
-            for category in self.categories
+            self.dataframe.loc[self.dataframe["category"] == c, "difficulty"].sum()
+            for c in self.categories
         ]
         x_pos = np.arange(len(self.categories))
-        width = 0.35
-        axes[1].bar(x_pos, category_difficulties, width=0.6, color="lightblue", edgecolor="black", label="Max Score")
-        axes[1].bar(x_pos, category_scores, width=0.6, color=self.category_colors[-1], edgecolor="black", label="Score")
-        axes[1].set_xlabel("Category")
-        axes[1].set_ylabel("Score $S_c$")
-        axes[1].set_xticks(x_pos)
-        axes[1].set_xticklabels(self.categories, rotation=0)
-        axes[1].grid(axis='y', alpha=0.3)
-        
-        # Plot 3: Score by subassembly (bar per subassembly)
-        subassembly_indices = self.dataframe[self.dataframe["process"].str.contains("subassembly")].index
+        axes[0, 1].bar(x_pos, category_difficulties, width=0.6, color="lightblue", edgecolor="black")
+        axes[0, 1].bar(x_pos, category_scores, width=0.6, color=self.category_colors[-1], edgecolor="black")
+        axes[0, 1].set_xlabel("Category")
+        axes[0, 1].set_ylabel("Score $S_c$")
+        axes[0, 1].set_xticks(x_pos)
+        axes[0, 1].set_xticklabels(self.categories, rotation=45, ha='right')
+        axes[0, 1].grid(axis='y', alpha=0.3)
+
+        # Bottom-left: subtask scores
+        subtask_names = list(self.subtask_scores.keys())
+        st_scores = [self.subtask_scores[s] for s in subtask_names]
+        st_max_scores = [self.subtask_max_scores[s] for s in subtask_names]
+        x_pos = np.arange(len(subtask_names))
+        axes[1, 0].bar(x_pos, st_max_scores, color="lightblue", width=0.6)
+        axes[1, 0].bar(x_pos, st_scores, color=self.category_colors[-1], width=0.6)
+        axes[1, 0].set_xticks(x_pos)
+        axes[1, 0].set_xticklabels(subtask_names, rotation=45, ha='right')
+        axes[1, 0].set_xlabel("Subtask")
+        axes[1, 0].set_ylabel("Score $S_{st}$")
+        axes[1, 0].grid(axis='y', alpha=0.3)
+
+        # Bottom-right: subassembly scores
+        subassembly_indices = self.dataframe[self.dataframe["primitive"].str.contains("subassembly")].index
         subassembly_scores = [
-            self.dataframe.loc[:sub_idx - 1, "score"].sum() if i == 0 else self.dataframe.loc[subassembly_indices[i - 1] + 1:sub_idx - 1, "score"].sum()
+            self.dataframe.loc[:sub_idx - 1, "score"].sum() if i == 0
+            else self.dataframe.loc[subassembly_indices[i - 1] + 1:sub_idx - 1, "score"].sum()
             for i, sub_idx in enumerate(subassembly_indices)
         ]
         subassembly_difficulties = [
-            self.dataframe.loc[:sub_idx - 1, "difficulty"].sum() if i == 0 else self.dataframe.loc[subassembly_indices[i - 1] + 1:sub_idx - 1, "difficulty"].sum()
+            self.dataframe.loc[:sub_idx - 1, "difficulty"].sum() if i == 0
+            else self.dataframe.loc[subassembly_indices[i - 1] + 1:sub_idx - 1, "difficulty"].sum()
             for i, sub_idx in enumerate(subassembly_indices)
         ]
         x_pos = np.arange(len(subassembly_indices))
-        subassembly_labels = [f"SA{i+1}" for i in range(len(subassembly_indices))]
-        axes[2].bar(x_pos, subassembly_difficulties, width=0.6, color="lightblue", edgecolor="black")
-        axes[2].bar(x_pos, subassembly_scores, width=0.6, color=self.category_colors[-1], edgecolor="black")
-        axes[2].set_xlabel("Subassembly")
-        axes[2].set_ylabel("Score $S_{sa}$")
-        axes[2].set_xticks(x_pos)
-        axes[2].set_xticklabels(subassembly_labels)
-        axes[2].grid(axis='y', alpha=0.3)
-        
+        axes[1, 1].bar(x_pos, subassembly_difficulties, width=0.6, color="lightblue", edgecolor="black")
+        axes[1, 1].bar(x_pos, subassembly_scores, width=0.6, color=self.category_colors[-1], edgecolor="black")
+        axes[1, 1].set_xlabel("Subassembly")
+        axes[1, 1].set_ylabel("Score $S_{sa}$")
+        axes[1, 1].set_xticks(x_pos)
+        axes[1, 1].set_xticklabels([f"SA{i+1}" for i in range(len(subassembly_indices))])
+        axes[1, 1].grid(axis='y', alpha=0.3)
+
         plt.tight_layout()
+        fig.legend(["max. score", "achieved score"], loc="upper center",
+                   bbox_to_anchor=(0.5, 1.02), ncol=2, frameon=False)
         plt.savefig("07_combined_scores.pdf", dpi=300, bbox_inches='tight')
         plt.close(fig)
 
     def _plot_combined_reliability(self):
-        """Plot subtask reliability, category reliability, and subassembly reliability in one figure"""
-        fig = plt.figure(figsize=(21 * self.cm, 4.5 * self.cm))
-        gs = fig.add_gridspec(1, 3, width_ratios=[6, 2, 2])
-        axes = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[0, 2])]
-        
-        # Plot 1: Subtask reliability
+        """2×2 grid: primitive reliability (top-left), category reliability (top-right),
+        subtask reliability (bottom-left), subassembly reliability (bottom-right)."""
+        fig, axes = plt.subplots(2, 2, figsize=(21 * self.cm, 10 * self.cm),
+                                 gridspec_kw={"width_ratios": [3, 2]})
+
+        # Top-left: primitive reliability
         ids = self.dataframe["ID"]
-        subtask_idx = ~np.isnan(ids)
-        ids = ids[subtask_idx]
-        reliability = self.dataframe["reliability"][subtask_idx] * 100
-        axes[0].bar(ids, reliability, color=self.category_colors[-1], width=0.6)
-        axes[0].set_xticks(np.arange(min(ids), max(ids) + 1)[::2])
-        axes[0].set_xticklabels(ids.to_numpy(dtype=int)[::2])
-        axes[0].set_xlabel("Subtask $i$")
-        axes[0].set_ylabel("Reliability $R_i$ [%]")
-        axes[0].grid(axis='y', alpha=0.3)
-        axes[0].set_ylim([0, 100])
-        
-        # Plot 2: Category reliability (boxplot)
+        prim_idx = ~np.isnan(ids)
+        ids = ids[prim_idx]
+        reliability = self.dataframe["reliability"][prim_idx] * 100
+        axes[0, 0].bar(ids, reliability, color=self.category_colors[-1], width=0.6)
+        axes[0, 0].set_xticks(np.arange(min(ids), max(ids) + 1)[::2])
+        axes[0, 0].set_xticklabels(ids.to_numpy(dtype=int)[::2])
+        axes[0, 0].set_xlabel("Primitive $i$")
+        axes[0, 0].set_ylabel("Reliability $R_i$ [%]")
+        axes[0, 0].grid(axis='y', alpha=0.3)
+        axes[0, 0].set_ylim([0, 110])
+
+        # Top-right: category reliability (boxplot)
         category_reliability = [
-            self.dataframe.loc[self.dataframe["category"] == category, "reliability"] * 100
-            for category in self.categories
+            self.dataframe.loc[self.dataframe["category"] == c, "reliability"] * 100
+            for c in self.categories
         ]
-        bplot = axes[1].boxplot(category_reliability, patch_artist=True)
+        bplot = axes[0, 1].boxplot(category_reliability, patch_artist=True)
         for patch, median in zip(bplot['boxes'], bplot['medians']):
             patch.set_facecolor(self.category_colors[-1])
             median.set_color("black")
-        axes[1].set_xlabel("Category")
-        axes[1].set_xticks(range(1, len(self.categories) + 1))
-        axes[1].set_xticklabels(self.categories)
-        axes[1].set_ylabel("Reliability $R_c$ [%]")
-        axes[1].set_ylim([0, 100])
-        
-        # Plot 3: Subassembly reliability
-        subassembly_indices = self.dataframe[self.dataframe["process"].str.contains("subassembly")].index
+        axes[0, 1].set_xlabel("Category")
+        axes[0, 1].set_xticks(range(1, len(self.categories) + 1))
+        axes[0, 1].set_xticklabels(self.categories, rotation=45, ha='right')
+        axes[0, 1].set_ylabel("Reliability $R_c$ [%]")
+        axes[0, 1].set_ylim([0, 110])
+
+        # Bottom-left: subtask reliability
+        subtask_names = list(self.subtask_reliability.keys())
+        st_reliabilities = [self.subtask_reliability[s] * 100 for s in subtask_names]
+        x_pos = np.arange(len(subtask_names))
+        axes[1, 0].bar(x_pos, st_reliabilities, color=self.category_colors[-1], width=0.6)
+        axes[1, 0].set_xticks(x_pos)
+        axes[1, 0].set_xticklabels(subtask_names, rotation=45, ha='right')
+        axes[1, 0].set_xlabel("Subtask")
+        axes[1, 0].set_ylabel("Reliability $R_{st}$ [%]")
+        axes[1, 0].set_ylim([0, 110])
+        axes[1, 0].grid(axis='y', alpha=0.3)
+
+        # Bottom-right: subassembly reliability
+        subassembly_indices = self.dataframe[self.dataframe["primitive"].str.contains("subassembly")].index
         subassembly_reliability = [
             self.dataframe.loc[subassembly_indices[i], "reliability"] * 100
             for i in range(len(subassembly_indices))
         ]
-        axes[2].bar([f"SA{i+1}" for i in range(len(subassembly_indices))], subassembly_reliability, color=self.category_colors[-1], edgecolor="black", width=0.6)
-        axes[2].set_xlabel("Subassembly")
-        axes[2].set_ylabel("Reliability $R_{sa}$ [%]")
-        axes[2].set_ylim([0, 100])
-        
+        axes[1, 1].bar([f"SA{i+1}" for i in range(len(subassembly_indices))],
+                       subassembly_reliability, color=self.category_colors[-1], edgecolor="black", width=0.6)
+        axes[1, 1].set_xlabel("Subassembly")
+        axes[1, 1].set_ylabel("Reliability $R_{sa}$ [%]")
+        axes[1, 1].set_ylim([0, 110])
+
         plt.tight_layout()
         plt.savefig("08_combined_reliability.pdf", dpi=300, bbox_inches='tight')
         plt.close(fig)
@@ -447,6 +823,6 @@ class AssemblyBenchmark():
         self._plot_combined_reliability()
 
 if __name__ == "__main__":
-    asm = AssemblyBenchmark(filepath=r"evaluation\benchmark_protocol_sheet.xlsx")
+    asm = AssemblyBenchmark(filepath=r"evaluation\benchmark_protocol_sheet_neu.xlsx")
     asm.evaluate()
     asm.visualize_results()
