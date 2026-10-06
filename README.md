@@ -1,14 +1,14 @@
 # LABIT: Long-Horizon Robotic Assembly Benchmark for Industrial Tasks
 Robot learning has undergone significant advancements in the domain of compliant control and robotic assembly.
 The development of novel methodologies has transcended the capacity to address discrete tasks, such as grasping or inserting, and has evolved to encompass the comprehensive construction of entire assemblies.
-Conventional benchmarks, which are predominantly focused on isolated tasks, are no longer adequate to address the complexity and interconnected nature of modern manufacturing processes. 
-Consequently, the necessity for benchmarks to encompass  a broader spectrum of assembly and subassembly steps is becoming apparent.
-In light of these developments, we propose an industrial robotic assembly benchmark for long-horizon manipulation. 
-This benchmark encompasses DIN-norm assembly tasks, including screwing, placing, inserting, and snapping, under both, high and low tolerance conditions.
+Conventional benchmarks, which are predominantly focused on single tasks, are no longer adequate to address the complexity and interconnected nature of modern manufacturing processes.
+Consequently, the necessity for benchmarks to encompass a broader spectrum of assembly and subassembly steps is becoming apparent.
+In light of these developments, we propose LABIT, an industrial robotic assembly benchmark for long-horizon manipulation.
+This benchmark encompasses DIN-norm assembly tasks, including screwing, placing, inserting, and snapping, under both high and low tolerance conditions.
 The successive nature of these assembly steps implies that prior errors can influence subsequent manipulation.
-Consequently, this benchmark is particularly relevant for assessing the robustness and failure recovery behavior of intelligent robotic systems.
+Consequently, this benchmark is particularly relevant for assessing the robustness of intelligent robotic systems.
 The proposed benchmarking protocols and novel performance metric, based on a taxonomy of assembly complexity in conjunction with the comprehensive list of parts and their corresponding CAD models, serve as essential tools for research and development in the field.
-To provide a baseline, we also solved the benchmark using traditional position-force-control.
+To provide a baseline, we evaluate the benchmark using traditional force-position control and report reliability and score metrics per primitive, subtask, assembly category, and subassembly.
 
 ## Acknowledgments
 Parts of this project page were adopted from the [Nerfies](https://nerfies.github.io/) page.
